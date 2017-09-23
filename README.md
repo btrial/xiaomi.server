@@ -15,3 +15,6 @@ where command:
 
 User python library to order Xiaomi:
 https://github.com/rytilahti/python-mirobo
+
+Obtain token using:
+https://github.com/jghaanstra/com.xiaomi-miio/blob/master/docs/obtain_token_mirobot_new.md

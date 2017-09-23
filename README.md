@@ -1,7 +1,11 @@
 # xiaomi.vacuum
 simple spring boot app to provide rest API to call Xiaomi Vacuum cleaner python commands on linux.
 
-call by http://localhost:8090/controller/{command}
+Run by:
+java -jar xiaomi.server.jar --xiaomi.ip=192.168.1.xx --xiaomi.token=xxxxxx
+
+Call endpoint by:
+http://localhost:8090/controller/{command}
 
 where command:
 1) start

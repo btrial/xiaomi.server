@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +18,13 @@ import com.btrial.xiaomi.server.XiaomiApplication;
 @RequestMapping("/controller")
 public class Controller {
 
-	 private static final Logger logger = LoggerFactory.getLogger(XiaomiApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(XiaomiApplication.class);
+	
+	@Value("${xiaomi.ip}")
+    private String ip;
+	
+	@Value("${xiaomi.token}")
+    private String token;
 	
 	@RequestMapping(method = RequestMethod.GET, value="/vacuum/{command}")
     public boolean start(@PathVariable("command") String command) {
@@ -25,7 +32,11 @@ public class Controller {
 		Process process;
 		try {
 			validateCommand(command);
-			process = Runtime.getRuntime().exec("mirobo --ip 192.168.1.25 --token 5a35344262666e526477315149535862 " + command);
+			String fullComand = "mirobo --ip " + ip + " --token " + token + " " + command;
+			
+			logger.info("Executing command: " + fullComand);
+			
+			process = Runtime.getRuntime().exec(fullComand);
 			int result = process.waitFor();
 			
 			logger.info("Response from command execution: " + result);
@@ -44,12 +55,12 @@ public class Controller {
 		if (command.equalsIgnoreCase("start") 
 				|| command.equalsIgnoreCase("stop")
 				|| command.equalsIgnoreCase("home")
+				|| command.equalsIgnoreCase("pause")
 				|| command.contains("fanspeed ")) {
 			
 		} else {
 			throw new Exception("Not supported command: " + command);
 		}
-		
 	}
 
 	private void writeOutput(Process process) throws IOException {
